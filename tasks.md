@@ -48,8 +48,8 @@ Done when: every setting reachable in ≤2 taps; all flows work on device.
 ## M6 — Verify & ship
 Done when: all 10 ACs pass on physical watch.
 
-- [ ] On-device pass of AC-1…AC-8 (short interval for testing)
-- [ ] Reboot test: reminders continue without opening app (AC-7)
-- [ ] Code audit: no networking, no `WKExtendedRuntimeSession`, no extra frameworks (AC-9), no English strings (AC-10)
-- [ ] App icon
+- [ ] On-device pass of AC-1…AC-8 (short interval for testing) (simulator-verified only)
+- [ ] Reboot test: reminders continue without opening app (AC-7) (simulator-verified only)
+- [x] Code audit: no networking, no `WKExtendedRuntimeSession`, no extra frameworks (AC-9), no English strings (AC-10)
+- [x] App icon
 - [ ] App Store: free, privacy label "Data Not Collected", Arabic metadata + screenshots, submit
