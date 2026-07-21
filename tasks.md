@@ -31,10 +31,10 @@ Done when: pending queue matches spec after every rebuild; self-check passes.
 ## M4 — Lifecycle & background refresh
 Done when: residue clears on open; refresh chain reschedules itself; revoked permission flips master off.
 
-- [ ] Rebuild on app becoming active (AC-4, AC-6)
-- [ ] `WKApplicationRefreshBackgroundTask` chain: preferred 60 min while enabled; handler = rebuild + schedule next + complete
-- [ ] Stop chain on pause/master-off
-- [ ] Re-check notification auth on activation; revoked → master off + hint state
+- [x] Rebuild on app becoming active (AC-4, AC-6)
+- [x] `WKApplicationRefreshBackgroundTask` chain: preferred 60 min while enabled; handler = rebuild + schedule next + complete
+- [x] Stop chain on pause/master-off
+- [x] Re-check notification auth on activation; revoked → master off + hint state
 
 ## M5 — UI
 Done when: every setting reachable in ≤2 taps; all flows work on device.

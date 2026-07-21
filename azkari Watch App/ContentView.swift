@@ -4,7 +4,8 @@
 //
 //  Created by Goldentik on 21/07/2026.
 //
-//  Temporary RTL smoke screen for M1 — M5 replaces this with the real UI.
+//  Temporary RTL smoke screen — M5 replaces this with the real UI.
+//  Lifecycle (rebuild on activation + refresh chain) lives in azkariApp.
 //
 
 import SwiftUI
@@ -16,14 +17,6 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
                 .padding()
-        }
-        // M3: rebuild on launch so the debug hook exercises the real path.
-        // M4 formalizes the lifecycle (rebuild on every activation + refresh chain).
-        .task {
-            #if DEBUG
-            if await Scheduler.handleDebugLaunchArguments() { return }
-            #endif
-            await Scheduler.rebuild()
         }
     }
 }

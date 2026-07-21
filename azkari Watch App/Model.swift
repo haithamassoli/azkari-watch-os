@@ -76,7 +76,8 @@ enum Settings {
     private static var defaults: UserDefaults { .standard }
 
     static var remindersOn: Bool {
-        defaults.bool(forKey: SettingsKey.remindersOn)
+        get { defaults.bool(forKey: SettingsKey.remindersOn) }
+        set { defaults.set(newValue, forKey: SettingsKey.remindersOn) }
     }
 
     static var intervalMinutes: Int {
