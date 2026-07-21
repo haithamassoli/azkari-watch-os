@@ -9,6 +9,10 @@ import SwiftUI
 
 @main
 struct azkari_Watch_AppApp: App {
+    init() {
+        registerDefaults()
+    }
+
     var body: some Scene {
         WindowGroup {
             NavigationStack {

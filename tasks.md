@@ -13,10 +13,10 @@ Done when: app builds and runs on watchOS 11 simulator in Arabic/RTL with empty 
 ## M2 — Data & settings store
 Done when: settings persist across relaunch; library exposes enabled subset.
 
-- [ ] `Dhikr` type + hardcoded 12-item library from PRD table
-- [ ] Settings store on UserDefaults: master on/off, interval (15m/30m/1h/2h/3h/4h), quiet start/end, enabled dhikr ids
-- [ ] Defaults: on, 1h, 22:00–07:00, all 12 enabled
-- [ ] Guard: enabled set can never become empty (AC-8)
+- [x] `Dhikr` type + hardcoded 12-item library from PRD table
+- [x] Settings store on UserDefaults: master on/off, interval (15m/30m/1h/2h/3h/4h), quiet start/end, enabled dhikr ids
+- [x] Defaults: on, 1h, 22:00–07:00, all 12 enabled
+- [x] Guard: enabled set can never become empty (AC-8)
 
 ## M3 — Scheduling engine
 Done when: pending queue matches spec after every rebuild; self-check passes.
