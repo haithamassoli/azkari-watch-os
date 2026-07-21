@@ -17,6 +17,14 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity)
                 .padding()
         }
+        // M3: rebuild on launch so the debug hook exercises the real path.
+        // M4 formalizes the lifecycle (rebuild on every activation + refresh chain).
+        .task {
+            #if DEBUG
+            if await Scheduler.handleDebugLaunchArguments() { return }
+            #endif
+            await Scheduler.rebuild()
+        }
     }
 }
 

@@ -40,7 +40,7 @@ enum SettingsKey {
     static let quietStartMinutes = "quietStartMinutes"
     static let quietEndMinutes = "quietEndMinutes"
     static let enabledMask = "enabledMask"
-    static let lastScheduledText = "lastScheduledText"
+    static let lastDeliveredText = "lastDeliveredText"
 }
 
 /// Shared default values, registered via `registerDefaults()`.
@@ -51,7 +51,7 @@ enum SettingsDefault {
     static let quietEndMinutes = 420    // 07:00
     /// All 12 bits set: bit (id-1) enables dhikr `id`.
     static let enabledMask = (1 << Dhikr.all.count) - 1 // 4095
-    static let lastScheduledText = ""
+    static let lastDeliveredText = ""
 
     /// Allowed interval choices (minutes).
     static let allowedIntervals = [15, 30, 60, 120, 180, 240]
@@ -65,7 +65,7 @@ func registerDefaults() {
         SettingsKey.quietStartMinutes: SettingsDefault.quietStartMinutes,
         SettingsKey.quietEndMinutes: SettingsDefault.quietEndMinutes,
         SettingsKey.enabledMask: SettingsDefault.enabledMask,
-        SettingsKey.lastScheduledText: SettingsDefault.lastScheduledText,
+        SettingsKey.lastDeliveredText: SettingsDefault.lastDeliveredText,
     ])
 }
 
@@ -95,9 +95,12 @@ enum Settings {
         defaults.integer(forKey: SettingsKey.enabledMask)
     }
 
-    static var lastScheduledText: String {
-        get { defaults.string(forKey: SettingsKey.lastScheduledText) ?? "" }
-        set { defaults.set(newValue, forKey: SettingsKey.lastScheduledText) }
+    /// Body of the newest DELIVERED notification ever observed — the dhikr the
+    /// user most recently received. Anchors the no-consecutive-repeat rule
+    /// (AC-2) across rebuilds. Empty until something has been delivered.
+    static var lastDeliveredText: String {
+        get { defaults.string(forKey: SettingsKey.lastDeliveredText) ?? "" }
+        set { defaults.set(newValue, forKey: SettingsKey.lastDeliveredText) }
     }
 
     /// Enabled subset of the library, decoded from `enabledMask`.

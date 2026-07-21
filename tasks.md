@@ -21,12 +21,12 @@ Done when: settings persist across relaunch; library exposes enabled subset.
 ## M3 — Scheduling engine
 Done when: pending queue matches spec after every rebuild; self-check passes.
 
-- [ ] Pure function: fire times from (now, interval, quiet window) — cadence, quiet-window jump, midnight wrap, equal start/end = disabled, cap 64
-- [ ] Pure function: random dhikr per slot from enabled set, no consecutive repeat (AC-2)
-- [ ] Notification builder: body = text only, `sound = nil`, `.active`, `threadIdentifier = "dhikr"`, unique id, non-repeating `UNCalendarNotificationTrigger`
-- [ ] Rebuild: remove all pending + delivered, schedule fresh queue
-- [ ] Pause/master-off: remove all pending + delivered (AC-5)
-- [ ] Unit test: fire-time computation (quiet wrap, DST-agnostic wall clock, cap) + no-repeat picker
+- [x] Pure function: fire times from (now, interval, quiet window) — cadence, quiet-window jump, midnight wrap, equal start/end = disabled, cap 64
+- [x] Pure function: random dhikr per slot from enabled set, no consecutive repeat (AC-2)
+- [x] Notification builder: body = text only, `sound = nil`, `.active`, `threadIdentifier = "dhikr"`, unique id, non-repeating `UNCalendarNotificationTrigger`
+- [x] Rebuild: remove all pending + delivered, schedule fresh queue
+- [x] Pause/master-off: remove all pending + delivered (AC-5)
+- [x] Unit test: fire-time computation (quiet wrap, DST-agnostic wall clock, cap) + no-repeat picker
 
 ## M4 — Lifecycle & background refresh
 Done when: residue clears on open; refresh chain reschedules itself; revoked permission flips master off.
