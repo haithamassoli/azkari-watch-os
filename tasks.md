@@ -5,12 +5,11 @@ AC-n = acceptance criterion n in PRD.md.
 ## M1 — Project baseline
 Done when: app builds and runs on watchOS 11 simulator in Arabic/RTL with empty screen.
 
-- [ ] Lower `WATCHOS_DEPLOYMENT_TARGET` 26.5 → 11.0
-- [ ] Set display name أذكار
-- [ ] Set `ar` as development language and only localization; add String Catalog
-- [ ] Strip Xcode template boilerplate from `ContentView.swift` / `azkariApp.swift`
-- [ ] Verify RTL + system font rendering of longest dhikr (id 10) on smallest watch size
-
+- [x] Lower `WATCHOS_DEPLOYMENT_TARGET` 26.5 → 11.0
+- [x] Set display name أذكار
+- [x] Set `ar` as development language and only localization; add String Catalog
+- [x] Strip Xcode template boilerplate from `ContentView.swift` / `azkariApp.swift`
+- [x] Verify RTL + system font rendering of longest dhikr (id 10) on smallest watch size
 ## M2 — Data & settings store
 Done when: settings persist across relaunch; library exposes enabled subset.
 
