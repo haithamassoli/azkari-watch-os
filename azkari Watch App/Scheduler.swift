@@ -68,6 +68,7 @@ enum Scheduler {
             content.sound = nil // default system haptic, no sound
             content.interruptionLevel = .active
             content.threadIdentifier = "dhikr"
+            content.categoryIdentifier = "dhikr" // routes to the custom long look
             let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: slot.date)
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
             try? await center.add(UNNotificationRequest(identifier: "dhikr-\(index)", content: content, trigger: trigger))

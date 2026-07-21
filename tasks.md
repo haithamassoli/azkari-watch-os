@@ -39,11 +39,11 @@ Done when: residue clears on open; refresh chain reschedules itself; revoked per
 ## M5 — UI
 Done when: every setting reachable in ≤2 taps; all flows work on device.
 
-- [ ] Home: master toggle, interval row, links to Adhkar list and Quiet hours
-- [ ] Adhkar list: 12 wrapping toggle rows; block turning off last enabled + brief hint (AC-8)
-- [ ] Quiet hours: start/end time pickers
-- [ ] First-enable permission request; denied state on Home with settings hint
-- [ ] Wire every settings change → immediate rebuild (AC-6)
+- [x] Home: master toggle, interval row, links to Adhkar list and Quiet hours
+- [x] Adhkar list: 12 wrapping toggle rows; block turning off last enabled + brief hint (AC-8)
+- [x] Quiet hours: start/end time pickers
+- [x] First-enable permission request; denied state on Home with settings hint
+- [x] Wire every settings change → immediate rebuild (AC-6)
 
 ## M6 — Verify & ship
 Done when: all 10 ACs pass on physical watch.

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UserNotifications
+import WatchKit
 
 @main
 struct azkari_Watch_AppApp: App {
@@ -21,9 +22,7 @@ struct azkari_Watch_AppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                ContentView()
-            }
+            ContentView()
         }
         // Every activation (launch included): re-check permission, clear
         // delivered residue, rebuild the queue, re-arm the refresh chain
@@ -37,6 +36,10 @@ struct azkari_Watch_AppApp: App {
         .backgroundTask(.appRefresh) { _ in
             await Scheduler.backgroundRefresh()
         }
+
+        // Custom long look: the dhikr large and centered — the reminder is
+        // the product's main moment.
+        WKNotificationScene(controller: DhikrNotificationController.self, category: "dhikr")
     }
 }
 
@@ -47,5 +50,32 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner]
+    }
+}
+
+// MARK: - Notification long look
+
+final class DhikrNotificationController: WKUserNotificationHostingController<DhikrNotificationView> {
+    private var text = ""
+
+    override var body: DhikrNotificationView {
+        DhikrNotificationView(text: text)
+    }
+
+    override func didReceive(_ notification: UNNotification) {
+        text = notification.request.content.body
+    }
+}
+
+struct DhikrNotificationView: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.title3.weight(.medium))
+            .multilineTextAlignment(.center)
+            .lineSpacing(4)
+            .frame(maxWidth: .infinity)
+            .scenePadding()
     }
 }
