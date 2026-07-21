@@ -1,6 +1,18 @@
 {
   "version": 1,
   "skills": {
+    "axiom-watchos": {
+      "source": "charleswiltgen/axiom",
+      "sourceType": "github",
+      "skillPath": ".claude-plugin/plugins/axiom/skills/axiom-watchos/SKILL.md",
+      "computedHash": "d7b538606cd3e07fe21ce4230b0cdff49f4159086e871643d056b375a692a2c4"
+    },
+    "ios-localization": {
+      "source": "dpearson2699/swift-ios-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ios-localization/SKILL.md",
+      "computedHash": "a1a29c5a2e6bc3c27cb3f986957599b29c2c598d9766493e221c59b64e4d9c8a"
+    },
     "swift-concurrency": {
       "source": "avdlee/swift-concurrency-agent-skill",
       "sourceType": "github",
