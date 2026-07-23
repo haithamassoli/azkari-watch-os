@@ -46,7 +46,7 @@ enum SettingsKey {
 /// Shared default values, registered via `registerDefaults()`.
 enum SettingsDefault {
     static let remindersOn = true
-    static let intervalMinutes = 60
+    static let intervalMinutes = 5
     static let quietStartMinutes = 1320 // 22:00
     static let quietEndMinutes = 420    // 07:00
     /// All 12 bits set: bit (id-1) enables dhikr `id`.
@@ -54,7 +54,7 @@ enum SettingsDefault {
     static let lastDeliveredText = ""
 
     /// Allowed interval choices (minutes).
-    static let allowedIntervals = [15, 30, 60, 120, 180, 240]
+    static let allowedIntervals = [1, 3, 5, 7, 10, 15, 20, 25, 30, 45, 60, 120, 180, 240]
 }
 
 /// Registers default values with `UserDefaults.standard`. Called from `azkariApp.init`.

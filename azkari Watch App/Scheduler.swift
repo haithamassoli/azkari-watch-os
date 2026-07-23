@@ -32,14 +32,22 @@ enum Scheduler {
         scheduleNextRefresh()
     }
 
-    /// Arms the next link of the refresh chain, preferred one hour out. No-op
-    /// once reminders are off — that (plus rebuild clearing the queue) is the
-    /// whole pause path; an already-armed link fires once, rebuilds to an empty
-    /// queue, and does not re-arm.
+    /// Arms the next link of the refresh chain, preferred one hour out but never
+    /// inside the quiet window — a wake that would land there is pushed to the
+    /// window's opening, so the app never wakes for a stretch in which no
+    /// notification was scheduled. No-op once reminders are off — that (plus
+    /// rebuild clearing the queue) is the whole pause path; an already-armed link
+    /// fires once, rebuilds to an empty queue, and does not re-arm.
     static func scheduleNextRefresh() {
         guard Settings.remindersOn else { return }
+        let preferred = nextActiveDate(
+            from: .now + 3600,
+            quietStartMinutes: Settings.quietStartMinutes,
+            quietEndMinutes: Settings.quietEndMinutes,
+            calendar: .current
+        )
         WKApplication.shared().scheduleBackgroundRefresh(
-            withPreferredDate: .now + 3600,
+            withPreferredDate: preferred,
             userInfo: nil
         ) { _ in } // best effort — a dropped link re-arms on next activation
     }
@@ -49,20 +57,36 @@ enum Scheduler {
     static func rebuild() async {
         let center = UNUserNotificationCenter.current()
         // AC-2 anchor = the dhikr the user most recently RECEIVED. It lives in
-        // the delivered list, so capture it before the wipe below discards it;
-        // when nothing is delivered (nothing fired since the last capture),
-        // the anchor persisted by an earlier rebuild stands.
-        if let newest = await center.deliveredNotifications().max(by: { $0.date < $1.date }) {
+        // the delivered list, so capture it before the cleanup below; when
+        // nothing is delivered (nothing fired since the last capture), the
+        // anchor persisted by an earlier rebuild stands.
+        let delivered = await center.deliveredNotifications()
+        let newest = delivered.max(by: { $0.date < $1.date })
+        if let newest {
             Settings.lastDeliveredText = newest.request.content.body
         }
         center.removeAllPendingNotificationRequests()
-        center.removeAllDeliveredNotifications()
 
-        guard Settings.remindersOn else { return }
-        guard await center.notificationSettings().authorizationStatus == .authorized else { return }
+        guard Settings.remindersOn,
+              await center.notificationSettings().authorizationStatus == .authorized else {
+            center.removeAllDeliveredNotifications() // paused/denied → clear the wrist
+            return
+        }
+
+        // Keep only the most recent delivered reminder on the wrist; drop the
+        // pile-up that accumulated since the last wake.
+        let keptIdentifier = newest?.request.identifier
+        center.removeDeliveredNotifications(
+            withIdentifiers: delivered.map(\.request.identifier).filter { $0 != keptIdentifier }
+        )
 
         let calendar = Calendar.current
         for (index, slot) in plan(calendar: calendar).enumerated() {
+            // Re-adding an identifier removes the delivered notification carrying
+            // it — skip the survivor's slot so the reschedule doesn't clobber it
+            // (one lost future slot of 64; the next text already differs via the
+            // anti-repeat rule).
+            if "dhikr-\(index)" == keptIdentifier { continue }
             let content = UNMutableNotificationContent()
             content.body = slot.text // no title — body only
             content.sound = nil // default system haptic, no sound

@@ -38,6 +38,18 @@ func fireDates(now: Date, intervalMinutes: Int, quietStartMinutes: Int, quietEnd
     return dates
 }
 
+/// Next instant at or after `candidate` that is NOT inside the quiet window — the
+/// next time a notification could actually fire. Returns `candidate` unchanged when
+/// it is already active, including when the window is disabled (start == end).
+/// Used to keep background wake-ups inside the active window.
+func nextActiveDate(from candidate: Date, quietStartMinutes: Int, quietEndMinutes: Int, calendar: Calendar) -> Date {
+    var t = candidate
+    while isQuiet(minutesOfDay: minutesOfDay(of: t, calendar: calendar), quietStartMinutes: quietStartMinutes, quietEndMinutes: quietEndMinutes) {
+        t = quietWindowExit(from: t, quietEndMinutes: quietEndMinutes, calendar: calendar)
+    }
+    return t
+}
+
 /// Uniformly random texts from `pool`, one per slot. No two consecutive picks are
 /// equal, and the first pick also differs from `avoidingFirst` — both rules apply
 /// only while the pool holds 2+ distinct texts (a single choice repeats freely).

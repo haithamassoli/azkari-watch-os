@@ -40,7 +40,7 @@ struct ContentView: View {
                 .navigationDestination(for: Screen.self) { screen in
                     switch screen {
                     case .adhkar: AdhkarListView()
-                    case .quiet: QuietHoursView()
+                    case .quiet: NotificationWindowView()
                     }
                 }
         }
@@ -104,7 +104,7 @@ struct HomeView: View {
                     subtitledRow("الأذكار", detail: "\(arabicDigits(enabledMask.nonzeroBitCount)) من \(arabicDigits(Dhikr.all.count))")
                 }
                 NavigationLink(value: Screen.quiet) {
-                    subtitledRow("ساعات الهدوء", detail: quietDetail)
+                    subtitledRow("وقت الإشعارات", detail: windowDetail)
                 }
             }
         }
@@ -118,8 +118,10 @@ struct HomeView: View {
         }
     }
 
-    private var quietDetail: String {
-        quietStart == quietEnd ? "معطّلة" : "\(timeText(quietStart)) – \(timeText(quietEnd))"
+    // Active window shown to the user = complement of the stored quiet window: its
+    // start is quietEnd (reminders resume), its end is quietStart (reminders stop).
+    private var windowDetail: String {
+        quietStart == quietEnd ? "طوال اليوم" : "\(timeText(quietEnd)) – \(timeText(quietStart))"
     }
 
     private func subtitledRow(_ title: String, detail: String) -> some View {
@@ -256,32 +258,36 @@ struct AdhkarListView: View {
     }
 }
 
-// MARK: - Quiet hours
+// MARK: - Notification window
 
-struct QuietHoursView: View {
+/// The period during which reminders appear. Stored as the quiet window (when NOT
+/// to notify), so it is inverted here: the active window's START binds to quietEnd
+/// (reminders resume) and its END binds to quietStart (reminders stop). Equal times
+/// = disabled quiet window = reminders all day.
+struct NotificationWindowView: View {
     @AppStorage(SettingsKey.quietStartMinutes) private var quietStart = SettingsDefault.quietStartMinutes
     @AppStorage(SettingsKey.quietEndMinutes) private var quietEnd = SettingsDefault.quietEndMinutes
 
     var body: some View {
         List {
             Section("البداية") {
-                DatePicker("البداية", selection: timeBinding($quietStart), displayedComponents: .hourAndMinute)
+                DatePicker("البداية", selection: timeBinding($quietEnd), displayedComponents: .hourAndMinute)
                     .labelsHidden()
             }
             Section {
-                DatePicker("النهاية", selection: timeBinding($quietEnd), displayedComponents: .hourAndMinute)
+                DatePicker("النهاية", selection: timeBinding($quietStart), displayedComponents: .hourAndMinute)
                     .labelsHidden()
             } header: {
                 Text("النهاية")
             } footer: {
                 Text(quietStart == quietEnd
-                     ? "الوقتان متساويان — ساعات الهدوء معطّلة"
-                     : "لا تصلك تذكيرات خلال هذه الفترة")
+                     ? "الوقتان متساويان — تظهر التذكيرات طوال اليوم"
+                     : "تظهر التذكيرات خلال هذه الفترة")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("ساعات الهدوء")
+        .navigationTitle("وقت الإشعارات")
         .azkariBackground()
         .onChange(of: quietStart) { Task { await Scheduler.rebuild() } }
         .onChange(of: quietEnd) { Task { await Scheduler.rebuild() } }

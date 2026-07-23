@@ -173,6 +173,17 @@ enum EngineCheck {
             check(!isQuiet(minutesOfDay: berlinMinutesOfDay(d), quietStartMinutes: 60, quietEndMinutes: 150), "dst-gap-none-inside-\(i)")
         }
 
+        // 8. nextActiveDate: a wake landing in the quiet window is pushed to the
+        //    window's opening; an already-active candidate is returned untouched.
+        check(nextActiveDate(from: at(2026, 7, 21, 10, 0), quietStartMinutes: 1320, quietEndMinutes: 420, calendar: cal) == at(2026, 7, 21, 10, 0), "active-outside-unchanged")
+        check(nextActiveDate(from: at(2026, 7, 21, 23, 0), quietStartMinutes: 1320, quietEndMinutes: 420, calendar: cal) == at(2026, 7, 22, 7, 0), "active-wrap-evening-to-next-morning")
+        check(nextActiveDate(from: at(2026, 7, 21, 3, 0), quietStartMinutes: 1320, quietEndMinutes: 420, calendar: cal) == at(2026, 7, 21, 7, 0), "active-wrap-morning-same-day")
+        check(nextActiveDate(from: at(2026, 7, 21, 13, 30), quietStartMinutes: 780, quietEndMinutes: 840, calendar: cal) == at(2026, 7, 21, 14, 0), "active-nonwrap-to-end")
+        check(nextActiveDate(from: at(2026, 7, 21, 13, 0), quietStartMinutes: 780, quietEndMinutes: 840, calendar: cal) == at(2026, 7, 21, 14, 0), "active-boundary-at-start-jumps")
+        check(nextActiveDate(from: at(2026, 7, 21, 14, 0), quietStartMinutes: 780, quietEndMinutes: 840, calendar: cal) == at(2026, 7, 21, 14, 0), "active-boundary-at-end-unchanged")
+        check(nextActiveDate(from: at(2026, 7, 21, 5, 40), quietStartMinutes: 540, quietEndMinutes: 540, calendar: cal) == at(2026, 7, 21, 5, 40), "active-disabled-window-unchanged")
+        check(nextActiveDate(from: bat(2026, 10, 25, 5, 30), quietStartMinutes: 1320, quietEndMinutes: 420, calendar: berlin) == bat(2026, 10, 25, 7, 0), "active-dst-fallback-wall-clock-7")
+
         print("ENGINE_CHECK_PASS")
     }
 }
