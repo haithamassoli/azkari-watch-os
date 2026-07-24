@@ -43,13 +43,15 @@ struct azkari_Watch_AppApp: App {
     }
 }
 
-/// A reminder landing while the app is open still shows as a banner.
+/// A reminder landing while the app is open still shows as a banner and plays
+/// a haptic without requesting notification sound.
 final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        [.banner]
+        WKInterfaceDevice.current().play(.notification)
+        return [.banner]
     }
 }
 

@@ -89,7 +89,7 @@ enum Scheduler {
             if "dhikr-\(index)" == keptIdentifier { continue }
             let content = UNMutableNotificationContent()
             content.body = slot.text // no title — body only
-            content.sound = nil // default system haptic, no sound
+            content.sound = nil // haptic-only alert; no notification sound
             content.interruptionLevel = .active
             content.threadIdentifier = "dhikr"
             content.categoryIdentifier = "dhikr" // routes to the custom long look
